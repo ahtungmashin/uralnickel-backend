@@ -1,0 +1,7 @@
+#Никогда не коммить:
+.env
+node_modules/
+uploads/
+dist/
+.DS_Store
+*.log
