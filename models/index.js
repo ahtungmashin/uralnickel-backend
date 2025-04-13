@@ -1,9 +1,8 @@
-import fs from 'fs';
-import path from 'path';
 import { Sequelize, DataTypes } from 'sequelize';
 import { fileURLToPath } from 'url';
+import path from 'path';
+import dotenv from 'dotenv';
 
-// Модели
 import UserModel from './User.js';
 import CourseModel from './Course.js';
 import CertificateModel from './Certificate.js';
@@ -13,19 +12,31 @@ import ProjectRequestModel from './ProjectRequest.js';
 import NotificationModel from './Notification.js';
 import NewsModel from './News.js';
 
-// Для __dirname в ESM
+// __dirname в ESM
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Конфигурация подключения
-const configPath = path.join(__dirname, '../config/config.json');
-const configJson = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
-const config = configJson['development'];
+// Загрузка переменных окружения
+dotenv.config();
 
-const sequelize = new Sequelize(config.database, config.username, config.password, {
-  host: config.host,
-  dialect: config.dialect
-});
+// Подключение через переменные окружения
+const sequelize = new Sequelize(
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
+  {
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT || 3306,
+    dialect: 'mysql',
+    logging: false,
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      }
+    }
+  }
+);
 
 // Инициализация моделей
 const User = UserModel(sequelize, DataTypes);
@@ -37,14 +48,14 @@ const ProjectRequest = ProjectRequestModel(sequelize, DataTypes);
 const Notification = NotificationModel(sequelize, DataTypes);
 const News = NewsModel(sequelize, DataTypes);
 
-// Ассоциации, если есть associate в модели
-Object.values(sequelize.models).forEach(model => {
+// Ассоциации, если есть
+Object.values(sequelize.models).forEach((model) => {
   if (model.associate) {
     model.associate(sequelize.models);
   }
 });
 
-// Экспорт моделей и sequelize
+// Экспорт
 export {
   sequelize,
   Sequelize,
