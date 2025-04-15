@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import { User } from '../models/index.js';
 import { parseCompetencies } from '../utils/parse.js';
 
+
 const router = express.Router();
 
 router.post('/login', async (req, res, next) => {

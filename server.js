@@ -1,5 +1,4 @@
 import express from 'express';
-import cors from 'cors';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
@@ -9,7 +8,7 @@ import jwt from 'jsonwebtoken';
 
 import { sequelize } from './models/index.js';
 
-import authRoutes from './routes/authRoutes.js'; // ✅ Подключение авторизации как router
+import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import courseRoutes from './routes/courseRoutes.js';
 import certificateRoutes from './routes/certificateRoutes.js';
@@ -21,7 +20,8 @@ import newsRoutes from './routes/newsRoutes.js';
 
 import auth from './middleware/authMiddleware.js';
 import currentUser from './middleware/currentUser.js';
-import errorHandler from './middleware/errorHandler.js'; 
+import errorHandler from './middleware/errorHandler.js';
+import corsMiddleware from './middleware/CORSmiddleware.js'; // ✅
 
 dotenv.config();
 
@@ -31,22 +31,17 @@ const __dirname = dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'https://uralnickel-frontend.vercel.app',
-    'https://uralnickel-frontend-nkcqaedtf-ahtungmashins-projects.vercel.app'
-  ],
-  credentials: true
-}));
-// Статические файлы
+// ✅ CORS middleware
+app.use(corsMiddleware);
+
+// 📁 Статические файлы
 app.use('/uploads', express.static(join(__dirname, 'uploads')));
 
-// Базовые мидлвары
+// 🔧 Базовые middleware
 app.use(express.json());
 
-// 🧩 Публичные маршруты
-app.use('/api/auth', authRoutes); // 👈 Теперь корректно
+// 🔓 Публичные маршруты
+app.use('/api/auth', authRoutes);
 app.use('/api/news', newsRoutes);
 
 // 🔐 Защищённые маршруты
@@ -59,20 +54,29 @@ app.use('/api/projects', projectRoutes);
 app.use('/api/project-requests', projectRequestRoutes);
 app.use('/api/notifications', notificationRoutes);
 
-// Стартовая проверка
+// 💡 Проверка доступности сервера
 app.get('/', (req, res) => {
   res.send('API is running');
 });
 
-// 🔌 Socket.IO
+// 🔌 Socket.IO с CORS
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: [
-      'http://localhost:5173',
-      'https://uralnickel-frontend.vercel.app',
-      'https://uralnickel-frontend-nkcqaedtf-ahtungmashins-projects.vercel.app'
-    ],
+    origin: function (origin, callback) {
+      const allowlist = [
+        'http://localhost:5173',
+        'https://uralnickel-frontend.vercel.app'
+      ];
+      if (!origin) return callback(null, true);
+      const isVercelPreview = origin.endsWith('.vercel.app');
+      if (allowlist.includes(origin) || isVercelPreview) {
+        callback(null, true);
+      } else {
+        console.warn('⛔ [Socket.IO] Запрещённый origin:', origin);
+        callback(new Error('Not allowed by Socket.IO CORS'));
+      }
+    },
     credentials: true
   }
 });
@@ -104,7 +108,8 @@ sequelize.sync().then(() => {
     console.log(`🚀 Сервер запущен на порту ${PORT}`);
   });
 }).catch((err) => {
-  console.error('Ошибка подключения к базе данных:', err);
+  console.error('❌ Ошибка подключения к базе данных:', err);
 });
 
-app.use(errorHandler); 
+// 🧯 Обработка ошибок
+app.use(errorHandler);
