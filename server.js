@@ -37,9 +37,7 @@ app.use('/uploads', express.static(join(__dirname, 'uploads')));
 // Базовые мидлвары
 app.use(cors({
   origin: [
-    'http://localhost:5173',
-    'https://uralnickel-frontend.vercel.app',
-    'https://uralnickel-frontend-lcvxzk7ru-ahtungmashins-projects.vercel.app'
+    'https://uralnickel-frontend-pgncpgxcb-ahtungmashins-projects.vercel.app'
   ],
   credentials: true
 }));
