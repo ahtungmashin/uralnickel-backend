@@ -31,16 +31,16 @@ const __dirname = dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Статические файлы
-app.use('/uploads', express.static(join(__dirname, 'uploads')));
-
-// Базовые мидлвары
 app.use(cors({
   origin: [
     'https://uralnickel-frontend-pgncpgxcb-ahtungmashins-projects.vercel.app'
   ],
   credentials: true
 }));
+// Статические файлы
+app.use('/uploads', express.static(join(__dirname, 'uploads')));
+
+// Базовые мидлвары
 app.use(express.json());
 
 // 🧩 Публичные маршруты
@@ -67,8 +67,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: [
-      'http://localhost:5173',                // для локальной разработки
-      'https://uralnickel-frontend.vercel.app' // Vercel-фронт
+      'https://uralnickel-frontend-pgncpgxcb-ahtungmashins-projects.vercel.app'
     ],
     credentials: true
   }
