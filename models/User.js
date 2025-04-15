@@ -33,5 +33,7 @@ export default (sequelize, DataTypes) => {
     experience: DataTypes.INTEGER
   }, {
     timestamps: true
+  }, {
+    tableName: 'users', // 👈 обязательно!
   });
 };

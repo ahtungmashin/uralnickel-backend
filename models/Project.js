@@ -33,7 +33,8 @@ export default (sequelize, DataTypes) => {
       allowNull: false
     }
   }, {
-    timestamps: true
+    timestamps: true,
+    tableName: 'projects', // 👈 обязательно!
   });
     Project.associate = (models) => {
     Project.belongsTo(models.User, { foreignKey: 'managerId', as: 'manager' });

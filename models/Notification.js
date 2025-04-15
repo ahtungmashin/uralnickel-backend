@@ -9,6 +9,7 @@ export default (sequelize, DataTypes) => {
       defaultValue: false
     }
   }, {
-    timestamps: true
+    timestamps: true,
+    tableName: 'notifications', // 👈 обязательно!
   });
 };

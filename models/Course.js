@@ -48,6 +48,6 @@ export default (sequelize, DataTypes) => {
     }
   }, {
     timestamps: true,
-    tableName: 'Courses'
+    tableName: 'courses'
   });
 };

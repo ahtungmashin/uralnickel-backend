@@ -12,10 +12,12 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.ENUM('pending', 'approved', 'rejected'),
       defaultValue: 'pending',
     }
+  }, {
+    tableName: 'projectrequests', // 👈 обязательно!
   });
 
   // Добавляем ассоциации
-  ProjectRequest.associate = (models) => {
+    ProjectRequest.associate = (models) => {
     ProjectRequest.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
     ProjectRequest.belongsTo(models.Project, { foreignKey: 'project_id', as: 'project' });
   };

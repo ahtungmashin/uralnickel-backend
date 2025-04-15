@@ -7,6 +7,8 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       defaultValue: 'pending'
     }
+  }, {
+    tableName: 'requests', // 👈 обязательно!
   });
 
   Request.associate = models => {
@@ -15,4 +17,5 @@ export default (sequelize, DataTypes) => {
   };
 
   return Request;
+  
 };

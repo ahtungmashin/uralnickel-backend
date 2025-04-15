@@ -5,5 +5,7 @@ export default (sequelize, DataTypes) => {
     description: DataTypes.TEXT,
     image: DataTypes.STRING,
     date: DataTypes.DATEONLY
+  }, {
+    tableName: 'news', // 👈 обязательно!
   });
 };

@@ -17,11 +17,12 @@ export default (sequelize, DataTypes) => {
       defaultValue: false
     }
   }, {
-    timestamps: true // Важно для createdAt
+    timestamps: true, // Важно для createdAt
+    tableName: 'certificates' // 👈 обязательно!
   });
 
   // 🔗 Ассоциации
-  Certificate.associate = (models) => {
+    Certificate.associate = (models) => {
     Certificate.belongsTo(models.User, { as: 'user', foreignKey: 'user_id' });
     Certificate.belongsTo(models.Course, { foreignKey: 'course_id' });
   };
