@@ -33,7 +33,9 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors({
   origin: [
-    'https://uralnickel-frontend-pgncpgxcb-ahtungmashins-projects.vercel.app'
+    'http://localhost:5173',
+    'https://uralnickel-frontend.vercel.app',
+    'https://uralnickel-frontend-nkcqaedtf-ahtungmashins-projects.vercel.app'
   ],
   credentials: true
 }));
@@ -67,7 +69,9 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: [
-      'https://uralnickel-frontend-pgncpgxcb-ahtungmashins-projects.vercel.app'
+      'http://localhost:5173',
+      'https://uralnickel-frontend.vercel.app',
+      'https://uralnickel-frontend-nkcqaedtf-ahtungmashins-projects.vercel.app'
     ],
     credentials: true
   }
