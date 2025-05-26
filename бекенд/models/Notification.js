@@ -13,4 +13,3 @@ export default (sequelize, DataTypes) => {
     tableName: 'notifications', // 👈 обязательно!
   });
 };
-
